@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <iomanip>
 #include <iostream>
 #include <latch>
 #include <random>
@@ -12,6 +13,7 @@
 #include <vector>
 
 #include "BaselineCollector.hpp"
+#include "MutexCollector.hpp"
 
 // Один забег: T потоков крутят цикл ровно seconds секунд
 template <class Collector>
@@ -110,14 +112,27 @@ std::vector<unsigned> gen_data(size_t N, uint32_t seed = 42) {
     return values;
 }
 
+template <class Collector>
+void run_with_data(const std::vector<unsigned>& values, const std::vector<unsigned>& T,
+                   const std::string& collector_name) {
+    constexpr int collector_name_width = 24;
+
+    for (auto t : T) {
+        auto median = measurePoint<Collector>(values, t);
+        std::cout << std::left << std::setw(collector_name_width) << collector_name << std::right
+                  << "T = " << std::setw(2) << t << "  Median = " << std::fixed
+                  << std::setprecision(3) << std::setw(10) << median / 1'000'000.0L << " Mops/s\n";
+    }
+}
+
 int main() {
     const size_t N = (1 << 20);
     std::vector<unsigned> values = gen_data(N);
-    // unsigned T[] = {1, 2, 4, 8, 16};
-    unsigned T[] = {1};
-    for (auto t : T) {
-        auto median = measurePoint<collector::BaselineCollector>(values, t);
-        std::cout << "BaselineCollector\tT = " << t << "\tMedian = " << median / 1'000'000.0L
-                  << " Mops/s\n";
-    }
+
+    std::vector<unsigned> T_one = {1};
+    run_with_data<collector::BaselineCollector>(values, T_one, "BaselineCollector");
+
+    std::vector<unsigned> T_full = {1, 2, 4, 8, 16};
+    run_with_data<collector::MutexCollector>(values, T_full, "MutexCollector");
+    run_with_data<collector::DryRunMutexCollector>(values, T_full, "DryRunMutexCollector");
 }
