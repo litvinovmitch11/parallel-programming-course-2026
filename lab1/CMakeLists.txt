@@ -11,6 +11,7 @@ find_package(Threads REQUIRED)
 add_executable(bench
     src/BaselineCollector.cpp
     src/MutexCollector.cpp
+    src/LockStripingCollector.cpp
     src/Benchmark.cpp
 )
 target_link_libraries(bench PRIVATE Threads::Threads)
@@ -19,6 +20,7 @@ target_compile_options(bench PRIVATE -Wall -Wextra -Wpedantic -O2)
 add_executable(bench_tsan
     src/BaselineCollector.cpp
     src/MutexCollector.cpp
+    src/LockStripingCollector.cpp
     src/Benchmark.cpp
 )
 target_link_libraries(bench_tsan PRIVATE Threads::Threads)

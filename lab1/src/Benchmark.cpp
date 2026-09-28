@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "BaselineCollector.hpp"
+#include "LockStripingCollector.hpp"
 #include "MutexCollector.hpp"
 
 // Один забег: T потоков крутят цикл ровно seconds секунд
@@ -123,6 +124,81 @@ void run_with_data(const std::vector<unsigned>& values, const std::vector<unsign
     }
 }
 
+template <class Collector, unsigned N = 10'000>
+void run_inconsistency_test(const std::vector<unsigned>& values, unsigned T,
+                            const std::string& collector_name) {
+    Collector collector;
+    // ожидание готовности потоков
+    std::latch ready{T};
+    // общий стартовый выстрел
+    std::latch start{1};
+    // флаг остановки
+    std::atomic<bool> stop = false;
+    // результаты потоков
+    std::vector<uint64_t> count(T);
+    std::vector<std::thread> threads;
+    threads.reserve(T);
+    for (size_t k = 0; k < T; ++k) {
+        threads.emplace_back([&, k] {
+            uint64_t local_count = 0;
+            size_t i = k * 1000;
+            // локальное состояние потока подготовлено
+            ready.count_down();
+            // ждем команды "старт"
+            start.wait();
+            while (!stop) {
+                collector.record(values[i]);
+                local_count++;
+                i++;
+                if (i == values.size())
+                    i = 0;
+            }
+            count[k] = local_count;
+        });
+    }
+    // ожидаем подготовку потоков
+    ready.wait();
+    // погнали!
+    start.count_down();
+    uint64_t sum_greater_count = 0;
+    uint64_t sum_equal_count = 0;
+    uint64_t sum_less_count = 0;
+    for (size_t i = 0; i < N; ++i) {
+        auto snapshot = collector.snapshot();
+        uint64_t sum_bucket = 0;
+        for (auto v : snapshot.buckets)
+            sum_bucket += v;
+        if (sum_bucket > snapshot.count)
+            sum_greater_count++;
+        else if (sum_bucket == snapshot.count)
+            sum_equal_count++;
+        else
+            sum_less_count++;
+    }
+    stop = true;
+    for (auto& t : threads) {
+        t.join();
+    }
+    const uint64_t broken_count = sum_less_count + sum_greater_count;
+    const long double broken_percent = 100.0L * static_cast<long double>(broken_count) / N;
+    std::cout << std::left << std::setw(24) << collector_name << std::right
+              << "T = " << std::setw(2) << T << "  Broken = " << std::fixed << std::setprecision(2)
+              << std::setw(6) << broken_percent << "% (" << std::setw(5) << broken_count << "/" << N
+              << ")"
+              << "  Less = " << std::setw(5) << sum_less_count << "  Equal = " << std::setw(5)
+              << sum_equal_count << "  Greater = " << std::setw(5) << sum_greater_count << "\n";
+
+    uint64_t count_from_threads = 0;
+    for (size_t i = 0; i < T; ++i) {
+        count_from_threads += count[i];
+    }
+    const uint64_t final_count = collector.snapshot().count;
+    std::cout << std::left << std::setw(24) << collector_name << std::right
+              << "T = " << std::setw(2) << T
+              << "  Final count = " << (count_from_threads == final_count ? "OK" : "MISMATCH")
+              << "  Threads = " << count_from_threads << "  Snapshot = " << final_count << "\n";
+}
+
 int main() {
     const size_t N = (1 << 20);
     std::vector<unsigned> values = gen_data(N);
@@ -133,4 +209,7 @@ int main() {
     std::vector<unsigned> T_full = {1, 2, 4, 8, 16};
     run_with_data<collector::MutexCollector>(values, T_full, "MutexCollector");
     run_with_data<collector::DryRunMutexCollector>(values, T_full, "DryRunMutexCollector");
+    run_with_data<collector::LockStripingCollector>(values, T_full, "LockStripingCollector");
+
+    run_inconsistency_test<collector::LockStripingCollector>(values, 4, "LockStripingCollector");
 }
