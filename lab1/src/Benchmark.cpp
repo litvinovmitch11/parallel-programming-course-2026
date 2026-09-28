@@ -115,11 +115,9 @@ std::vector<unsigned> gen_data(size_t N, uint32_t seed = 42) {
 template <class Collector>
 void run_with_data(const std::vector<unsigned>& values, const std::vector<unsigned>& T,
                    const std::string& collector_name) {
-    constexpr int collector_name_width = 24;
-
     for (auto t : T) {
         auto median = measurePoint<Collector>(values, t);
-        std::cout << std::left << std::setw(collector_name_width) << collector_name << std::right
+        std::cout << std::left << std::setw(24) << collector_name << std::right
                   << "T = " << std::setw(2) << t << "  Median = " << std::fixed
                   << std::setprecision(3) << std::setw(10) << median / 1'000'000.0L << " Mops/s\n";
     }
