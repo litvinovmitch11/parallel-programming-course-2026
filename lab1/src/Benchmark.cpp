@@ -15,6 +15,7 @@
 #include "BaselineCollector.hpp"
 #include "LockStripingCollector.hpp"
 #include "MutexCollector.hpp"
+#include "ThreadLocalCollector.hpp"
 
 // Один забег: T потоков крутят цикл ровно seconds секунд
 template <class Collector>
@@ -210,6 +211,8 @@ int main() {
     run_with_data<collector::MutexCollector>(values, T_full, "MutexCollector");
     run_with_data<collector::DryRunMutexCollector>(values, T_full, "DryRunMutexCollector");
     run_with_data<collector::LockStripingCollector>(values, T_full, "LockStripingCollector");
+    run_with_data<collector::ThreadLocalCollector>(values, T_full, "ThreadLocalCollector");
 
     run_inconsistency_test<collector::LockStripingCollector>(values, 4, "LockStripingCollector");
+    run_inconsistency_test<collector::ThreadLocalCollector>(values, 4, "ThreadLocalCollector");
 }
