@@ -1,0 +1,70 @@
+snapshot.count = 14111357893
+BaselineCollector             T =  1  Median =    473.185 Mops/s
+snapshot.count = 2476748850
+MutexCollector                T =  1  Median =     82.312 Mops/s
+snapshot.count = 416723976
+MutexCollector                T =  2  Median =     14.005 Mops/s
+snapshot.count = 363202233
+MutexCollector                T =  4  Median =     12.123 Mops/s
+snapshot.count = 270305805
+MutexCollector                T =  8  Median =      9.000 Mops/s
+snapshot.count = 198929087
+MutexCollector                T = 16  Median =      6.599 Mops/s
+snapshot.count = 0
+DryRunMutexCollector          T =  1  Median =     87.501 Mops/s
+snapshot.count = 0
+DryRunMutexCollector          T =  2  Median =     18.162 Mops/s
+snapshot.count = 0
+DryRunMutexCollector          T =  4  Median =     16.138 Mops/s
+snapshot.count = 0
+DryRunMutexCollector          T =  8  Median =     14.117 Mops/s
+snapshot.count = 0
+DryRunMutexCollector          T = 16  Median =     12.907 Mops/s
+snapshot.count = 1561969209
+LockStripingCollector         T =  1  Median =     52.145 Mops/s
+snapshot.count = 337232524
+LockStripingCollector         T =  2  Median =     11.295 Mops/s
+snapshot.count = 328177425
+LockStripingCollector         T =  4  Median =     10.950 Mops/s
+snapshot.count = 283000864
+LockStripingCollector         T =  8  Median =      9.774 Mops/s
+snapshot.count = 199022114
+LockStripingCollector         T = 16  Median =      6.461 Mops/s
+snapshot.count = 13499966877
+ThreadLocalCollector          T =  1  Median =    483.215 Mops/s
+snapshot.count = 25039618190
+ThreadLocalCollector          T =  2  Median =    851.921 Mops/s
+snapshot.count = 45140417897
+ThreadLocalCollector          T =  4  Median =   1463.748 Mops/s
+snapshot.count = 64909423099
+ThreadLocalCollector          T =  8  Median =   2174.935 Mops/s
+snapshot.count = 83430397136
+ThreadLocalCollector          T = 16  Median =   2799.345 Mops/s
+snapshot.count = 4291824755
+DoubleBufferCollector         T =  1  Median =    143.940 Mops/s
+snapshot.count = 8455979822
+DoubleBufferCollector         T =  2  Median =    281.783 Mops/s
+snapshot.count = 15711877946
+DoubleBufferCollector         T =  4  Median =    519.322 Mops/s
+snapshot.count = 28833078742
+DoubleBufferCollector         T =  8  Median =    946.594 Mops/s
+snapshot.count = 39873930075
+DoubleBufferCollector         T = 16  Median =   1265.056 Mops/s
+snapshot.count = 4282728024
+BrokenDoubleBufferCollector   T =  1  Median =    144.143 Mops/s
+snapshot.count = 8416857464
+BrokenDoubleBufferCollector   T =  2  Median =    281.646 Mops/s
+snapshot.count = 14924288755
+BrokenDoubleBufferCollector   T =  4  Median =    491.868 Mops/s
+snapshot.count = 25597874346
+BrokenDoubleBufferCollector   T =  8  Median =    850.974 Mops/s
+snapshot.count = 39391157943
+BrokenDoubleBufferCollector   T = 16  Median =   1318.936 Mops/s
+LockStripingCollector         T =  4  Broken =  94.11% ( 9411/10000)  Less =  9176  Equal =   589  Greater =   235
+LockStripingCollector         T =  4  Final count = OK  Threads = 254982  Snapshot = 254982
+ThreadLocalCollector          T =  4  Broken =  99.68% ( 9968/10000)  Less =  9966  Equal =    32  Greater =     2
+ThreadLocalCollector          T =  4  Final count = OK  Threads = 8665515  Snapshot = 8665515
+DoubleBufferCollector         T =  4  Broken =   0.00% (    0/10000)  Less =     0  Equal = 10000  Greater =     0
+DoubleBufferCollector         T =  4  Final count = OK  Threads = 3638285  Snapshot = 3638285
+BrokenDoubleBufferCollector   T =  4  Broken =  99.43% ( 9943/10000)  Less =  9943  Equal =    57  Greater =     0
+BrokenDoubleBufferCollector   T =  4  Final count = MISMATCH  Threads = 3290761  Snapshot = 3290755

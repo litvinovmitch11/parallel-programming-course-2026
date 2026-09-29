@@ -1,0 +1,5 @@
+collector,threads,snapshots,broken_percent,less,equal,greater,thread_count,snapshot_count,difference
+LockStripingCollector,4,10000,94.110000,9176,589,235,254982,254982,0
+ThreadLocalCollector,4,10000,99.680000,9966,32,2,8665515,8665515,0
+DoubleBufferCollector,4,10000,0.000000,0,10000,0,3638285,3638285,0
+BrokenDoubleBufferCollector,4,10000,99.430000,9943,57,0,3290761,3290755,-6

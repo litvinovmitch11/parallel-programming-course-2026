@@ -14,8 +14,7 @@ void BaselineCollector::record(uint64_t value) {
 
 Snapshot BaselineCollector::snapshot() {
     uint64_t curr = 0;
-    long double threshold =
-        static_cast<long double>(count) * 0.50;
+    long double threshold = static_cast<long double>(count) * 0.50;
     uint64_t p50 = 0;
     for (uint64_t i = 0; i < 256; ++i) {
         curr += buckets[i];

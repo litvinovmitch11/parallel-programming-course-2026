@@ -13,6 +13,7 @@ add_executable(bench
     src/MutexCollector.cpp
     src/LockStripingCollector.cpp
     src/ThreadLocalCollector.cpp
+    src/DoubleBufferCollector.cpp
     src/Benchmark.cpp
 )
 target_link_libraries(bench PRIVATE Threads::Threads)
@@ -23,6 +24,7 @@ add_executable(bench_tsan
     src/MutexCollector.cpp
     src/LockStripingCollector.cpp
     src/ThreadLocalCollector.cpp
+    src/DoubleBufferCollector.cpp
     src/Benchmark.cpp
 )
 target_link_libraries(bench_tsan PRIVATE Threads::Threads)
